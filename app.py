@@ -14,7 +14,8 @@ class ConfigClass(object):
     SQLALCHEMY_DATABASE_URI = os.getenv('POSTGRES_DSN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
     CORS_HEADERS = ['Content-Type', 'application/json']
-    MA_GATEWAY_URL = os.getenv('METAANCHOR_API_URL')
+    METAANCHOR_API_URL = os.getenv('METAANCHOR_API_URL', 'http://metaanchor.avdev.at/api/v1') # fixme encode production
+    METAANCHOR_API_KEY = os.getenv('METAANCHOR_API_KEY')
 
 
 def create_app():
