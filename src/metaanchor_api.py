@@ -12,24 +12,30 @@ class MetaAnchorAPI:
     def get(self, path, params={}):
         requ_url = self._base_url + path.strip('/')
         try:
-            response = requests.get(url=requ_url,
-                                    params=params,
-                                    headers=self._headers)
+            response = requests.get(url=requ_url, params=params, headers=self._headers)
 
             response_data = response.json() # Tryparse
             return response_data
 
         except Exception as e:
-            self._logger.error(f"Request to {requ_url} failed: {e}")
+            self._logger.error(f"GET-Request to {requ_url} failed: {e}")
             return None
 
-        return {"success": False}
 
     def post(self, path, json_data):
-        return None
+        requ_url = self._base_url + path.strip('/')
+        try:
+            response = requests.post(url=requ_url, json=json_data, headers=self._headers)
+
+            response_data = response.json()  # Tryparse
+            return response_data
+
+        except Exception as e:
+            self._logger.error(f"POST-Request to {requ_url} failed: {e}")
+            return None
+
 
     def resolve(self, token_id=None, anchor=None):
-
         to_resolve = None
         nr_params = 0
 

@@ -5,6 +5,7 @@ from flask_cors import CORS
 from src.database import setup_db, get_db
 from src.collection import bp as bp_collection
 from src.artwork import bp as bp_artwork
+from src.drop import bp as bp_drop
 
 import os
 from sqlalchemy import exc, select
@@ -19,7 +20,6 @@ class ConfigClass(object):
     METAANCHOR_API_URL = os.getenv('METAANCHOR_API_URL', 'http://metaanchor.avdev.at/api/v1') # fixme encode production
     METAANCHOR_API_KEY = os.getenv('METAANCHOR_API_KEY')
 
-
 def create_app():
     app = Flask(__name__)
     app.config.from_object(__name__+'.ConfigClass')
@@ -30,6 +30,7 @@ def create_app():
     # Register blueprints
     app.register_blueprint(bp_collection)
     app.register_blueprint(bp_artwork)
+    app.register_blueprint(bp_drop)
 
     # assemble database
     # setup_db(app=app)

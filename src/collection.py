@@ -34,7 +34,7 @@ def getMetadata(collection_name, token_id):
     slid, anchor = MetaAnchorAPI().resolve(token_id=token_id)
 
     return {
-        "name": f"{anchor[0:5]}..{anchor[-3:]}", # Note the SLID should normally never be disclosed. This is for demo-purposes only!
+        "name": f"MetaAnchor {anchor[0:5]}..{anchor[-3:]}", # Note the SLID should normally never be disclosed. This is for demo-purposes only!
         "description": "This is DigitalSoul SandboxDemo Metadata and subject to change!",
         "image": public_url.strip('/') + f'/artwork/{collection_name}/{anchor}', # This calls the endpoint below
         "external_url": "",
