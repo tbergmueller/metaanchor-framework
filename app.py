@@ -4,6 +4,8 @@ import argparse
 from flask_cors import CORS
 from src.database import setup_db, get_db
 from src.collection import bp as bp_collection
+from src.artwork import bp as bp_artwork
+
 import os
 from sqlalchemy import exc, select
 import waitress
@@ -27,6 +29,7 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(bp_collection)
+    app.register_blueprint(bp_artwork)
 
     # assemble database
     # setup_db(app=app)

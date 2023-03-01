@@ -1,9 +1,10 @@
 import os
 
-from flask import Blueprint, request, current_app, Response
+from flask import Blueprint, request, current_app, Response, send_file
 from src.database import get_db
 import json
-import requests
+from src.metaanchor_api import MetaAnchorAPI
+
 
 bp = Blueprint('collection', __name__, url_prefix='/collection/')
 db = get_db() # move that to app.db
@@ -22,39 +23,28 @@ def assemble_error_response(error_code, msg, http_err_code= 500, ex=None):
     return Response(json.dumps(resp_obj), status=http_err_code, mimetype='application/json')
 
 
-
-
 @bp.route('/<string:collection_name>/<int:token_id>', methods=['GET'])
 def getMetadata(collection_name, token_id):
-    # generiere bild
-    #
 
-    slid_resolve_url = current_app.config['METAANCHOR_API_URL'] + f"/anchor/resolve-token/{token_id}"
+    # Create a dynamic URL for images
+    public_url = os.getenv('PUBLIC_URL')
 
-    # FIXME PROPER! error handling
-    headers = {'Authorization': f'Bearer {os.getenv("METAANCHOR_API_KEY")}'}
-    response = requests.get(url=slid_resolve_url, headers=headers)
-
-    jresp = json.loads(response.text)
-
-    if "raw_resp" not in jresp:
-        return assemble_error_response(error_code="INTERNAL_ERROR", msg="Unexpected response format")
-
-    if "slid" not in jresp["raw_resp"]:
-        return assemble_error_response(error_code="INTERNAL_ERROR", msg="Unexpected response format")
-
-    slid = jresp["raw_resp"]['slid']
+    # Note the SLID should never be disclosed, this is for demo-purposes only
+    # If you disclose a label-identifier, use the Anchor!
+    slid, anchor = MetaAnchorAPI().resolve(token_id=token_id)
 
     return {
-        "name": f"DS {slid}",
+        "name": f"{anchor[0:5]}..{anchor[-3:]}", # Note the SLID should normally never be disclosed. This is for demo-purposes only!
         "description": "This is DigitalSoul SandboxDemo Metadata and subject to change!",
-        "image": "ipfs://QmUhvy1WYQGiWP8z2jKsBMVUKinicbaV9xx9TfKYhPP2HC/4.gif",
+        "image": public_url.strip('/') + f'/artwork/{collection_name}/{anchor}', # This calls the endpoint below
         "external_url": "",
         "background_color": "",
         "attributes": [
             {
-                "trait_type": "SLID",
-                "value": slid
+                "trait_type": "Anchor",
+                "value": anchor
             }
         ]
     }
+
+
