@@ -1,4 +1,5 @@
 import logging
+import os
 
 from flask import Blueprint, request, current_app, Response, send_file, abort
 import werkzeug.exceptions
@@ -8,8 +9,8 @@ from src.metaanchor_api import MetaAnchorAPI
 
 bp = Blueprint('artwork', __name__, url_prefix='/artwork/')
 
-@bp.route('/<string:collection_name>/<string:anchor>', methods=['GET'])
-def getAnchorImage(collection_name, anchor):
+@bp.route('/<string:anchor>', methods=['GET'])
+def getAnchorImage(anchor):
     # Use opencv to paint a bit on the image
 
     [slid, anchor] = MetaAnchorAPI().resolve(anchor)
@@ -38,3 +39,7 @@ def getAnchorImage(collection_name, anchor):
     response.headers.set('Content-Length', len(buf))
 
     return response
+
+@bp.route('/img/list', methods=['GET'])
+def get_list():
+    return {"blub": os.listdir(os.getcwd() + "/assets/"), "hi": os.getcwd()}

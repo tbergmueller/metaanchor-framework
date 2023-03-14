@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5557:8080"
+    networks:
+      - my-network
+    depends_on:
+      - db
+    volumes:
+      - ./backend/assets:/usr/local/share/metaanchor-backend/assets
+      - ./backend/conf:/usr/local/share/metaanchor-backend/conf
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - my-network
+  frontend:
+    build: ./frontend
+    ports:
+      - "5558:8080"
+    networks:
+      - my-network
+    depends_on:
+      - backend
+
+volumes:
+  db-data:
+  
+networks:
+  my-network:

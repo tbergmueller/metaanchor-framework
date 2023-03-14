@@ -23,8 +23,8 @@ def assemble_error_response(error_code, msg, http_err_code= 500, ex=None):
     return Response(json.dumps(resp_obj), status=http_err_code, mimetype='application/json')
 
 
-@bp.route('/<string:collection_name>/<int:token_id>', methods=['GET'])
-def getMetadata(collection_name, token_id):
+@bp.route('/<int:token_id>', methods=['GET'])
+def getMetadata(token_id):
 
     # Create a dynamic URL for images
     public_url = os.getenv('PUBLIC_URL')
@@ -36,7 +36,7 @@ def getMetadata(collection_name, token_id):
     return {
         "name": f"MetaAnchor {anchor[0:5]}..{anchor[-3:]}", # Note the SLID should normally never be disclosed. This is for demo-purposes only!
         "description": "This is DigitalSoul SandboxDemo Metadata and subject to change!",
-        "image": public_url.strip('/') + f'/artwork/{collection_name}/{anchor}', # This calls the endpoint below
+        "image": public_url.strip('/') + f'/artwork/{anchor}', # This calls the endpoint below
         "external_url": "",
         "background_color": "",
         "attributes": [
