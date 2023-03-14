@@ -17,7 +17,6 @@ def getAnchorImage(collection_name, anchor):
     if not slid:
         raise werkzeug.exceptions.NotFound(f"No artwork for anchor {anchor}")
 
-
     # For Demo-Purposes, we will now write the SLID into the image!
     # This is a security risk in an actual setting
     # Never make the SLID public!

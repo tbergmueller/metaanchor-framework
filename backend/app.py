@@ -25,7 +25,7 @@ def create_app():
     app.config.from_object(__name__+'.ConfigClass')
 
     # Supports credentials is important to carry the cookies for user authentication...
-    cors = CORS(app, resources={r"/*": {"origins": "*"}, "/user/*": {"origins": "*"}}, supports_credentials=True )
+    cors = CORS(app, resources={r"/*": {"origins": "*"}, r"/drop/": {"origins": "*"}, "/user/*": {"origins": "*"}}, supports_credentials=True )
 
     # Register blueprints
     app.register_blueprint(bp_collection)
