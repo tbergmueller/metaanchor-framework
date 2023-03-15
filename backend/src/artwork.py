@@ -28,17 +28,15 @@ def getAnchorImage(anchor):
     # For Demo-Purposes, we will now write the SLID into the image!
     # This is a security risk in an actual setting
     # Never make the SLID public!
-    img = cv2.imread('assets/metaanchor_template.png', cv2.IMREAD_UNCHANGED)
+    img = cv2.imread('assets/digitalsoul_template.jpg', cv2.IMREAD_UNCHANGED)
 
     # font
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    color = (0, 0, 0, 255)
-    thickness = 5
+    font = cv2.FONT_HERSHEY_DUPLEX
+    color = (255, 255, 255, 255)
+    thickness = 10
 
     # Using cv2.putText() method
-    img = cv2.putText(img, slid,  (200, 620), font, 2, color, thickness, cv2.LINE_AA)
-    img = cv2.putText(img, "DigitalSoul", (200, 110), font, 1.7, color, 4, cv2.LINE_AA)
-    img = cv2.putText(img, "(R)", (480, 80), font, 0.8, color, 1, cv2.LINE_AA)
+    img = cv2.putText(img, slid,  (1200, 1080), font, 3.7, color, thickness, cv2.LINE_AA)
 
     _, img_encoded = cv2.imencode('.png', img)
     buf = img_encoded.tobytes()

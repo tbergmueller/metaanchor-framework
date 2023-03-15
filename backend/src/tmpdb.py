@@ -13,4 +13,4 @@ class TemporaryDatabase:
     def getAttributes(self, slid_b36):
         if slid_b36 in self._data["att_per_base36_slid"]:
             return self._data["att_per_base36_slid"][slid_b36]
-        return None
+        return []
