@@ -27,8 +27,7 @@ def assemble_error_response(error_code, msg, http_err_code= 500, ex=None):
 def getMetadata(token_id):
 
     # Create a dynamic URL for images
-    public_url = os.getenv('PUBLIC_URL')
-
+    public_url = os.getenv('PUBLIC_URL', request.base_url.replace(f'collection/{token_id}', ''))
     # Note the SLID should never be disclosed, this is for demo-purposes only
     # If you disclose a label-identifier, use the Anchor!
     slid, anchor = MetaAnchorAPI().resolve(token_id=token_id)

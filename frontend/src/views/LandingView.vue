@@ -24,7 +24,6 @@
   import axios from 'axios';
 
     const apiClient = axios.create({
-    baseURL: process.env.BACKEND_URL || 'http://127.0.0.1:5557',
     withCredentials: false,
     headers: {
         Accept: 'application/json',
@@ -65,8 +64,6 @@
 				return				
 			}
 
-			
-
 			let bodyParams = {
                 "sip_token": this.sipToken,
                 "beneficiary": this.beneficiary
@@ -74,9 +71,7 @@
 
 			this.appendOutput("Starting to drop anchor.. this may take a while")
 
-            console.log(apiClient.baseURL)
-
-            apiClient.post('/drop/', bodyParams) // FIXME this needs configuration!
+      apiClient.post('/drop/', bodyParams) // FIXME this needs configuration!
 				.then(response => this.appendOutput(JSON.stringify(response.data)))
 				.catch(error => this.appendOutput(error));
             
