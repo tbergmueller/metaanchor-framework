@@ -5,7 +5,7 @@ services:
     build: ./backend
     container_name: metaanchor_backend
     ports:
-      - "5557:8080"
+      - "5020:8080"
     depends_on:
       - db
     volumes:
@@ -30,7 +30,7 @@ services:
     container_name: metaanchor_frontend
     build: ./frontend
     ports:
-      - "5558:8080"
+      - "5071:8080"
     depends_on:
       - backend
     networks:
