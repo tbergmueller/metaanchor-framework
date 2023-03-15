@@ -1,10 +1,11 @@
 import os
 import requests
 import logging
+from flask import current_app
 
 class MetaAnchorAPI:
     def __init__(self):
-        self._headers = {'Authorization': f'Bearer {os.getenv("METAANCHOR_API_KEY")}'}
+        self._headers = {'Authorization': f'Bearer {current_app.config["METAANCHOR_API_KEY"]}'}
         # API base url guaranteed to have a trailing slash
         self._base_url = os.getenv('METAANCHOR_API_URL', 'https://metaanchor.avdev.at/api/v1').strip('/') + "/"
         self._logger =  logging.getLogger('metaanchor')
