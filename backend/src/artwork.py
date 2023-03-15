@@ -4,8 +4,10 @@ import os
 from flask import Blueprint, request, current_app, Response, send_file, abort
 import werkzeug.exceptions
 import cv2
+from src.tmpdb import TemporaryDatabase
 
 from src.metaanchor_api import MetaAnchorAPI
+
 
 bp = Blueprint('artwork', __name__, url_prefix='/artwork/')
 
@@ -17,6 +19,11 @@ def getAnchorImage(anchor):
 
     if not slid:
         raise werkzeug.exceptions.NotFound(f"No artwork for anchor {anchor}")
+
+    potentialImage = TemporaryDatabase().getImageName(slid_b36=slid)
+    if potentialImage:
+        # simply return that image
+        return send_file(f"assets/{potentialImage}", mimetype='image/jpg')
 
     # For Demo-Purposes, we will now write the SLID into the image!
     # This is a security risk in an actual setting

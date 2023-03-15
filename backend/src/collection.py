@@ -1,13 +1,13 @@
 import os
 
 from flask import Blueprint, request, current_app, Response, send_file
-from src.database import get_db
+from src.tmpdb import TemporaryDatabase
 import json
 from src.metaanchor_api import MetaAnchorAPI
 
 
+
 bp = Blueprint('collection', __name__, url_prefix='/collection/')
-db = get_db() # move that to app.db
 
 
 def assemble_error_response(error_code, msg, http_err_code= 500, ex=None):
@@ -32,18 +32,20 @@ def getMetadata(token_id):
     # If you disclose a label-identifier, use the Anchor!
     slid, anchor = MetaAnchorAPI().resolve(token_id=token_id)
 
+
+    atts = [{"trait_type": "Anchor", "value": anchor }]
+    additional_attributes = TemporaryDatabase().getAttributes(slid_b36=slid)
+
+    for att in additional_attributes:
+        atts.append(att)
+
     return {
         "name": f"MetaAnchor {anchor[0:5]}..{anchor[-3:]}", # Note the SLID should normally never be disclosed. This is for demo-purposes only!
         "description": "This is DigitalSoul SandboxDemo Metadata and subject to change!",
         "image": public_url.strip('/') + f'/artwork/{anchor}', # This calls the endpoint below
         "external_url": "",
         "background_color": "",
-        "attributes": [
-            {
-                "trait_type": "Anchor",
-                "value": anchor
-            }
-        ]
+        "attributes": atts
     }
 
 
