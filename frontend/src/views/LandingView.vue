@@ -50,6 +50,8 @@
             this.queryParams[key] = value;
             }
             this.outputSip()
+            this.beneficiary = this.queryParams['av_beneficiary']
+          
     },
     methods: {
       async dropAnchor() {
