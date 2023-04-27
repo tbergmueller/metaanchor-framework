@@ -48,4 +48,7 @@ def getMetadata(token_id):
         "attributes": atts
     }
 
+@bp.route('/asset-from-sip/<string:sip_token>', methods=['GET'])
+def getAssetFromSip(sip_token):
+    return MetaAnchorAPI().get_asset_info(sip_token=sip_token)
 

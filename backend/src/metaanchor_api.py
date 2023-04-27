@@ -59,6 +59,9 @@ class MetaAnchorAPI:
         return jresp['slid'], jresp['anchor']
 
 
-
+    def get_asset_info(self, sip_token):
+        jresp = self.get(f"/anchor/asset-by-sip/{sip_token}")
+        # FIXME error handling...
+        return jresp
 
 
