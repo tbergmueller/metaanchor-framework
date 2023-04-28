@@ -40,6 +40,11 @@ def create_app():
     # Supports credentials is important to carry the cookies for user authentication...
     cors = CORS(app, resources={r"/*": {"origins": "*"}, r"/drop/": {"origins": "*"}, "/user/*": {"origins": "*"}}, supports_credentials=True )
 
+    import logging
+    logger = logging.getLogger('waitress')
+    logger.setLevel("DEBUG")
+    logger.info('Hello baby!')
+
     # Register blueprints
     app.register_blueprint(bp_collection)
     app.register_blueprint(bp_artwork)

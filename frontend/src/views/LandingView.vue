@@ -1,10 +1,11 @@
 <template>
     <div>
-       
         <br>
-
-        <label for="text-sip">SIP-Token</label>
-        <input type="text" id="text-sip" name="text-sip" v-model="sipToken" disabled>
+        <label for="text-sip">Scanned Anchor</label>
+        <input type="text" id="text-sip" name="text-sip" v-model="anchor" disabled>
+        <br>
+        <label for="text-sip">Current owner</label>
+        <input type="text" id="text-sip" name="text-sip" v-model="owner" disabled>
         <br><br>
         <br>
         <div>
@@ -13,7 +14,14 @@
             <button @click="dropAnchor">Drop Anchor</button>
         </div>
         <div>
-            <textarea id="output_window" cols="50" rows="20" v-model="logOutput"></textarea>
+            <textarea id="output_window" cols="50" rows="5" v-model="logOutput"></textarea>
+        </div>
+        <div>
+          <textarea hidden="true" id="nft_window" cols="50" rows="5" v-model="nftInfoString"></textarea>
+        </div>
+
+        <div>
+          <img :src="imgUrl" :style="{ maxWidth: '100%' }" />
         </div>
         
 
@@ -41,7 +49,13 @@
         logOutput: "Waiting for output..",
         queryParams: {},
         sipToken: null,
+        nftInfoString: null,
+        nftInfo: null,
         beneficiary: "",
+        anchor: "fetching...",
+        owner: "fetching...",
+        imgUrl: null,
+
       };
     },
     created() {
@@ -51,9 +65,31 @@
             }
             this.outputSip()
             this.beneficiary = this.queryParams['av_beneficiary']
-          
+            this.fetchChainState()      
+    },
+    mounted() {
+    },
+    beforeUnmount() {
     },
     methods: {
+     async fetchChainState() {
+      apiClient.get('/collection/asset-from-sip/' + this.sipToken) // FIXME this needs configuration!
+              .then((response) => {
+                this.nftInfoString = JSON.stringify(response.data)
+                console.log(this.nftInfo)
+                this.nftInfo = response.data;
+                this.anchor = this.nftInfo.anchor
+                this.owner = this.nftInfo.owner
+                if(this.anchor && this.owner) {
+                  if(this.owner.toLowerCase() == this.beneficiary.toLowerCase()) {
+                    this.imgUrl = this.nftInfo.metadata.image
+                  } else {
+                    this.imgUrl = null
+                  }
+                }
+              })
+              .catch(error => this.appendOutput(error));
+     },
       async dropAnchor() {
         this.clearOutput()
         if (!this.sipToken || !this.sipToken.startsWith('v2.local')) {
@@ -74,9 +110,11 @@
 			this.appendOutput("Starting to drop anchor.. this may take a while")
 
       apiClient.post('/drop/', bodyParams) // FIXME this needs configuration!
-				.then(response => this.appendOutput(JSON.stringify(response.data)))
-				.catch(error => this.appendOutput(error));
-            
+				.then((response) => {
+          this.appendOutput(JSON.stringify(response.data))
+          this.fetchChainState()
+        })
+				.catch(error => this.appendOutput(error));            
 
       },
       outputSip() {

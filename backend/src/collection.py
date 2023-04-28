@@ -25,6 +25,9 @@ def assemble_error_response(error_code, msg, http_err_code= 500, ex=None):
 
 @bp.route('/<int:token_id>', methods=['GET'])
 def getMetadata(token_id):
+    import logging
+    logger = logging.getLogger('waitress')
+    logger.info(f'Metadata for {token_id}')
 
     # Create a dynamic URL for images
     public_url = os.getenv('PUBLIC_URL', request.base_url.replace(f'collection/{token_id}', ''))
@@ -50,5 +53,8 @@ def getMetadata(token_id):
 
 @bp.route('/asset-from-sip/<string:sip_token>', methods=['GET'])
 def getAssetFromSip(sip_token):
+    import logging
+    logger = logging.getLogger('waitress')
+    logger.info(f'assetRequest')
     return MetaAnchorAPI().get_asset_info(sip_token=sip_token)
 
