@@ -7,7 +7,7 @@ class MetaAnchorAPI:
     def __init__(self):
         self._headers = {'Authorization': f'Bearer {current_app.config["METAANCHOR_API_KEY"]}'}
         # API base url guaranteed to have a trailing slash
-        self._base_url = os.getenv('METAANCHOR_API_URL', 'https://metaanchor.avdev.at/api/v1').strip('/') + "/"
+        self._base_url = os.getenv('METAANCHOR_API_URL', 'https://api.metaanchor.io/api/v1').strip('/') + "/"
         self._logger =  logging.getLogger('metaanchor')
 
     def get(self, path, params={}):

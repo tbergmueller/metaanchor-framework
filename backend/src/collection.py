@@ -22,18 +22,27 @@ def assemble_error_response(error_code, msg, http_err_code= 500, ex=None):
 
     return Response(json.dumps(resp_obj), status=http_err_code, mimetype='application/json')
 
+def intTryParse(value):
+    try:
+        return int(value), True
+    except ValueError:
+        return value, False
 
-@bp.route('/<int:token_id>', methods=['GET'])
-def getMetadata(token_id):
+@bp.route('/<string:token_id_or_anchor>', methods=['GET'])
+def getMetadata(token_id_or_anchor):
     import logging
     logger = logging.getLogger('waitress')
-    logger.info(f'Metadata for {token_id}')
+    logger.info(f'Metadata for {token_id_or_anchor}')
+
+    if token_id_or_anchor.isdigit():
+        token_id = int(token_id_or_anchor)
+        slid, anchor = MetaAnchorAPI().resolve(token_id=token_id)
+    else:
+        anchor = token_id_or_anchor
+        slid, anchor = MetaAnchorAPI().resolve(anchor=anchor)
 
     # Create a dynamic URL for images
-    public_url = os.getenv('PUBLIC_URL', request.base_url.replace(f'collection/{token_id}', ''))
-    # Note the SLID should never be disclosed, this is for demo-purposes only
-    # If you disclose a label-identifier, use the Anchor!
-    slid, anchor = MetaAnchorAPI().resolve(token_id=token_id)
+    public_url = os.getenv('PUBLIC_URL', request.base_url.replace(f'collection/{token_id_or_anchor}', ''))
 
 
     atts = [{"trait_type": "Anchor", "value": anchor }]
