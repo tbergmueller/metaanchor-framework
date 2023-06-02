@@ -235,8 +235,8 @@
 
      async dropAnchor() {
         this.clearOutput()
-        if (!this.sipToken || !this.sipToken.startsWith('v2.local')) {
-				this.reportError("SIP-Token via GET-Parameter not retrieved correctly. Supposed to be in av_sip and being in format v2.local.*")
+        if (!this.sipToken || (!this.sipToken.startsWith('v2.local') && !this.sipToken.startsWith('v4.public'))) {
+				this.reportError("SIP-Token via GET-Parameter not retrieved correctly. Supposed to be in av_sip and being in format v2.local.* or v4.public.*")
 				return
 			}
 
