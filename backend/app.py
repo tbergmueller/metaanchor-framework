@@ -19,14 +19,14 @@ class ConfigClass(object):
     SQLALCHEMY_DATABASE_URI = os.getenv('POSTGRES_DSN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False    # Avoids SQLAlchemy warning
     CORS_HEADERS = ['Content-Type', 'application/json']
-    METAANCHOR_API_URL = os.getenv('METAANCHOR_API_URL', 'http://metaanchor.avdev.at/api/v1') # fixme encode production
+    METAANCHOR_API_URL = os.getenv('METAANCHOR_API_URL', 'http://api.metaanchor.io.at/api/v1') # fixme encode production
 
     default_api_key = ''
     # Try to read from config file
     try:
         with open('conf/metaanchor.json', 'r') as f:
             data = json.load(f)
-            default_api_key = data['polygon-mumbai']['api_key'] # FIXME! not configureable at all...
+            default_api_key = data['polygon-pos']['api_key'] # FIXME! not configureable at all...
             print("Default API-Key loaded from conf/metaanchor.json")
     except Exception as e:
         print(f"Error loading conf/metaanchor.json - unparseable: {e} ")
