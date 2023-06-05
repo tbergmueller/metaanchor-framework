@@ -13,7 +13,7 @@
   <div :hidden="hideSpinner" ref="animationContainer" style="margin: 0 auto; margin-top:30px; margin-bottom:30px; width: 150px; height: 150px;"></div>  
 
   <div :hidden="imageHidden">  
-    <video v-if="isVideo" :src="imgUrl" :style="{maxWidth: '90%'}" autoplay muted loop>
+    <video v-if="isVideo" :src="imgUrl" :style="{maxWidth: '90%'}" autoplay muted loop playsinline="true" preload="auto">
       Your browser does not support the video tag.
     </video>
     <img v-else :src="imgUrl" :style="{maxWidth: '90%'}" /> 
