@@ -8,6 +8,10 @@ class TemporaryDatabase:
     def getImageName(self, slid_b36):
         if slid_b36 in self._data["img_per_base36_slid"]:
             return self._data["img_per_base36_slid"][slid_b36]
+
+        if "default_img" in self._data:
+            return self._data["default_img"]
+            
         return None
 
     def getTokenMetadata(self, slid_b36):
