@@ -10,14 +10,19 @@ class TemporaryDatabase:
             return self._data["img_per_base36_slid"][slid_b36]
         return None
 
-    def getAttributes(self, slid_b36):
-        if slid_b36 in self._data["att_per_base36_slid"]:
-            return self._data["att_per_base36_slid"][slid_b36]
-        return []
+    def getTokenMetadata(self, slid_b36):
+        if "metadata_default" not in self._data:
+            raise Exception("Default metadata missing in DB")
 
-    def getTokenName(self, slid_b36):
-        if "name_per_base36_slid" not in self._data:
-            return None
-        if slid_b36 in self._data["name_per_base36_slid"]:
-            return self._data["name_per_base36_slid"][slid_b36]
-        return None
+        metadata = self._data["metadata_default"]
+
+        if slid_b36 in self._data["metadata_per_base36_slid"]:
+            specificMetadata = self._data["metadata_per_base36_slid"][slid_b36]
+            metadata.update(specificMetadata)
+
+        return metadata
+
+    def getDefaultTokenName(self):
+        if "default_token_name" not in self._data:
+            raise Exception("Default token name not in DB")
+        return self._data["default_token_name"]

@@ -45,26 +45,15 @@ def getMetadata(token_id_or_anchor):
     public_url = os.getenv('PUBLIC_URL', request.base_url.replace(f'collection/{token_id_or_anchor}', ''))
 
 
-    atts = []
-    additional_attributes = TemporaryDatabase().getAttributes(slid_b36=slid)
+    metadata = TemporaryDatabase().getTokenMetadata(slid_b36=slid)
 
-    for att in additional_attributes:
-        atts.append(att)
+    if "name" not in metadata:
+        metadata["name"] = f"{TemporaryDatabase().getDefaultTokenName()} {anchor[0:5]}..{anchor[-3:]}"
 
-    token_name = f"MetaAnchor {anchor[0:5]}..{anchor[-3:]}"  # Note the SLID should normally never be disclosed. This is for demo-purposes only!
+    if "image" not in metadata:
+        metadata["image"] = public_url.strip('/') + f'/artwork/{anchor}',  # This calls the endpoint below
 
-    individual_name = TemporaryDatabase().getTokenName(slid_b36=slid)
-    if individual_name:
-        token_name = individual_name
-
-    return {
-        "name": token_name,
-        "description": "",
-        "image": public_url.strip('/') + f'/artwork/{anchor}',  # This calls the endpoint below
-        "external_url": "",
-        "background_color": "",
-        "attributes": atts
-    }
+    return metadata
 
 @bp.route('/asset-from-sip/<string:sip_token>', methods=['GET'])
 def getAssetFromSip(sip_token):
