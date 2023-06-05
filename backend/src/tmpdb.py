@@ -14,3 +14,10 @@ class TemporaryDatabase:
         if slid_b36 in self._data["att_per_base36_slid"]:
             return self._data["att_per_base36_slid"][slid_b36]
         return []
+
+    def getTokenName(self, slid_b36):
+        if "name_per_base36_slid" not in self._data:
+            return None
+        if slid_b36 in self._data["name_per_base36_slid"]:
+            return self._data["name_per_base36_slid"][slid_b36]
+        return None

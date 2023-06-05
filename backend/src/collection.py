@@ -45,16 +45,22 @@ def getMetadata(token_id_or_anchor):
     public_url = os.getenv('PUBLIC_URL', request.base_url.replace(f'collection/{token_id_or_anchor}', ''))
 
 
-    atts = [{"trait_type": "Anchor", "value": anchor }]
+    atts = []
     additional_attributes = TemporaryDatabase().getAttributes(slid_b36=slid)
 
     for att in additional_attributes:
         atts.append(att)
 
+    token_name = f"MetaAnchor {anchor[0:5]}..{anchor[-3:]}"  # Note the SLID should normally never be disclosed. This is for demo-purposes only!
+
+    individual_name = TemporaryDatabase().getTokenName(slid_b36=slid)
+    if individual_name:
+        token_name = individual_name
+
     return {
-        "name": f"MetaAnchor {anchor[0:5]}..{anchor[-3:]}", # Note the SLID should normally never be disclosed. This is for demo-purposes only!
-        "description": "This is DigitalSoul SandboxDemo Metadata and subject to change!",
-        "image": public_url.strip('/') + f'/artwork/{anchor}', # This calls the endpoint below
+        "name": token_name,
+        "description": "",
+        "image": public_url.strip('/') + f'/artwork/{anchor}',  # This calls the endpoint below
         "external_url": "",
         "background_color": "",
         "attributes": atts
