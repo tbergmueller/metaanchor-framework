@@ -12,8 +12,11 @@
 
   <div :hidden="hideSpinner" ref="animationContainer" style="margin: 0 auto; margin-top:30px; margin-bottom:30px; width: 150px; height: 150px;"></div>  
 
-  <div>
-    <img :src="imgUrl" :hidden="imageHidden" :style="{ maxWidth: '90%' }" />
+  <div :hidden="imageHidden">  
+    <video v-if="isVideo" :src="imgUrl" :style="{maxWidth: '90%'}" autoplay muted loop>
+      Your browser does not support the video tag.
+    </video>
+    <img v-else :src="imgUrl" :style="{maxWidth: '90%'}" /> 
   </div>
 
   <div class="owner-box" style="margin-top: 50px" :hidden="hideOwner">
@@ -63,6 +66,7 @@
         ownerLink: "",
         ownerLinkText: "?",
         imgUrl: null,
+        isVideo: null,
         tokenUri: null,
         tokenMetadata: null,
         errorMsg: null,
@@ -110,8 +114,17 @@
         toReturn += walletAddr.substring(len - 7, len-1)
         return toReturn;
      },
+     async getMimeTypeOfImage() {
+      axios.head(this.imgUrl).then(response => {
+        const contentType = response.headers['content-type'];
+        this.isVideo = contentType.startsWith("video/")
+        console.log("isVideo? " + this.isVideo + "(Content-type: " + contentType + ")")
+      }).catch(error => {
+        console.error(`Error retrieving MIME-type from ${this.imgUrl}: ${error}`)
+      })
+     },
      async fetchChainState() {
-      console.log("fetching chain state..")
+      console.log("Fetch chainstate...")
       apiClient.get('/collection/asset-from-sip/' + this.sipToken) // FIXME this needs configuration!
               .then((response) => {
                 this.nftInfoString = JSON.stringify(response.data)
@@ -163,6 +176,7 @@
       axios.get(this.tokenUri).then(response => {
         this.tokenMetadata = response.data;
         this.imgUrl = this.tokenMetadata.image;        
+        this.getMimeTypeOfImage();
       }).catch(error => {
         console.log(error)
       })      

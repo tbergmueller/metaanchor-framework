@@ -1,5 +1,6 @@
 import logging
 import os
+import mimetypes
 
 from flask import Blueprint, request, current_app, Response, send_file, abort
 import werkzeug.exceptions
@@ -22,8 +23,11 @@ def getAnchorImage(anchor):
 
     potentialImage = TemporaryDatabase().getImageName(slid_b36=slid)
     if potentialImage:
+        # determine file-type
+        mimetype, _ = mimetypes.guess_type(potentialImage)
+
         # simply return that image
-        return send_file(f"assets/{potentialImage}", mimetype='image/jpg')
+        return send_file(f"assets/{potentialImage}", mimetype=mimetype)
 
     # For Demo-Purposes, we will now write the SLID into the image!
     # This is a security risk in an actual setting
